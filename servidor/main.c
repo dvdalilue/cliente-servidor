@@ -52,21 +52,33 @@ int main(int argc, char *argv[]) {
   dir_sever.sin_addr.s_addr = INADDR_ANY;//Debe ser cambiado por SALA de alguna forma
   dir_sever.sin_port = htons(puerto);
 
+  //Enlaza el sock descriptor con la direccion del servidor
+
   if (bind(sock_fd, (struct sockaddr *) &dir_sever, sizeof(dir_sever)) < 0) 
     error("ERROR on binding");
+
+  //Escucha por peticiones
 
   listen(sock_desc,2);
   cliente = sizeof(dir_clien);
 
+  //Acepta las peticiones si es que han llegado en un nuevo descriptor
+
   if (sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente) < 0)
     error("Error al aceptar");
 
+  //Inicializa el buffer "tmp" es zeros
+
   bzero(tmp, sizeof(tmp));
+
+  //Lee del descriptor sock_fd
 
   if (read(sock_fd,tmp,511) < 0)
     error("Error leyendo del socket");
 
   printf("Mensaje: %s\n",tmp);
+
+  //Envia un mensaje de respuesta
 
   if (write(sock_fd,"Mensaje recibido",16) < 0)
     error("Error escribiendo en el socket");
