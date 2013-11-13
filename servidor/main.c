@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   }
   //Si alguno no fue especificado, termina la ejecucion con un mensaje
   if (puerto == 0 || strcmp(sala,"vacio") == 0) {
-    printf("\n***Falta espesificar algun valor o no se hizo correctamente!!!\n\n");
+    printf("\n***Falta especificar algun valor o no se hizo correctamente!!!\n\n");
     exit(0);
   }
 
