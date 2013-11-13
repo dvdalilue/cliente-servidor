@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (puerto == -1 || strcmp(host,"vacio") == 0 || strcmp(nombre,"vacio") == 0 || strcmp(archivo,"vacio") == 0) {
-    printf("\n***Falta espesificar algun valor o no se hizo correctamente!!!\n\n");
+    printf("\n***Falta especificar algun valor o no se hizo correctamente!!!\n\n");
     exit(0);
   }
 
