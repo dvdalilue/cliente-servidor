@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
   /*   exit(0); */
   /* } */
 
+
   //Declarcion del descriptor del socket y estructuras relevantes
 
   int sock_desc, sock_fd;
