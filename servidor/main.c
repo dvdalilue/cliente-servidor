@@ -47,14 +47,14 @@ int main(int argc, char *argv[]) {
 
   //Creacion del socket
 
-  if ((sock_desc = socket(AF_LOCAL, SOCK_STREAM,0)) < 0) {
+  if ((sock_desc = socket(AF_INET, SOCK_STREAM,0)) < 0) {
     perror("socket");
     return 1;
   }
   //bzero((char *) &dir_sever, sizeof(dir_sever));
 
 
-  dir_sever.sin_family = AF_LOCAL;
+  dir_sever.sin_family = AF_INET;
   dir_sever.sin_addr.s_addr = inet_addr("127.0.0.1");//Debe ser cambiado por SALA de alguna forma
   dir_sever.sin_port = htons(puerto);
 
@@ -76,29 +76,36 @@ int main(int argc, char *argv[]) {
   
   cliente = sizeof(dir_clien);
 
-  //Acepta las peticiones si es que han llegado en un nuevo descriptor
+  while (true) {
 
-  if (sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente) != -1)
-    error("Error al aceptar");
+    //Acepta las peticiones si es que han llegado en un nuevo descriptor
 
-  //Inicializa el buffer "tmp" es zeros
+    if ((sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente)) == -1) {
+      perror("accept");
+      return 4;
+    }
 
-  bzero(tmp, sizeof(tmp));
+    send(sock_fd, "Bienvenido a mi servidor!!!\n",26, 0);
 
-  //Lee del descriptor sock_fd
+    //Inicializa el buffer "tmp" es zeros
 
-  if (read(sock_fd,tmp,511) < 0)
-    error("Error leyendo del socket");
+    bzero(tmp, sizeof(tmp));
 
-  printf("Mensaje: %s\n",tmp);
+    //Lee del descriptor sock_fd
 
-  //Envia un mensaje de respuesta
+    if (read(sock_fd,tmp,511) < 0) {
+      perror("Error leyendo del socket");
+      return 5;
+    }
+    printf("Mensaje: %s\n",tmp);
 
-  if (write(sock_fd,"Mensaje recibido",16) < 0)
-    error("Error escribiendo en el socket");
+    //Envia un mensaje de respuesta
 
-  printf("Se conectaron desde %s\n", inet_ntoa(dir_clien.sin_addr));
-  send(sock_fd, "Bienvenido a mi servidor!!!\n",26, 0);
+    if (write(sock_fd,"Mensaje recibido",16) < 0) {
+      perror("Error escribiendo en el socket");
+      return 6;
+    }
+  }
   close(sock_fd);
   close(sock_desc);
   return 0;
