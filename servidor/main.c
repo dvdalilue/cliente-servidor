@@ -7,7 +7,11 @@
 #include <netinet/in.h>
 #include "funciones.c"
 
+#define BACKLOG 2
+
 int main(int argc, char *argv[]) {
+
+  printf("PID: %d\n",getpid());
 
   //Reconocimiento de opciones de entrada
 
@@ -29,10 +33,10 @@ int main(int argc, char *argv[]) {
     i++;
   }
   //Si alguno no fue especificado, termina la ejecucion con un mensaje
-  if (puerto == 0 || strcmp(sala,"vacio") == 0) {
-    printf("\n***Falta espesificar algun valor o no se hizo correctamente!!!\n\n");
-    exit(0);
-  }
+  /* if (puerto == 0 || strcmp(sala,"vacio") == 0) { */
+  /*   printf("\n***Falta espesificar algun valor o no se hizo correctamente!!!\n\n"); */
+  /*   exit(0); */
+  /* } */
 
   //Declarcion del descriptor del socket y estructuras relevantes
 
@@ -43,28 +47,38 @@ int main(int argc, char *argv[]) {
 
   //Creacion del socket
 
-  sock_desc = socket(AF_INET, SOCK_STREAM,0);
+  if ((sock_desc = socket(AF_LOCAL, SOCK_STREAM,0)) < 0) {
+    perror("socket");
+    return 1;
+  }
+  //bzero((char *) &dir_sever, sizeof(dir_sever));
 
-  bzero((char *) &dir_sever, sizeof(dir_sever));
 
-
-  dir_sever.sin_family = AF_INET;
-  dir_sever.sin_addr.s_addr = INADDR_ANY;//Debe ser cambiado por SALA de alguna forma
+  dir_sever.sin_family = AF_LOCAL;
+  dir_sever.sin_addr.s_addr = inet_addr("127.0.0.1");//Debe ser cambiado por SALA de alguna forma
   dir_sever.sin_port = htons(puerto);
+
+  //bzero(&(dir_sever.sin_zero),8);
 
   //Enlaza el sock descriptor con la direccion del servidor
 
-  if (bind(sock_fd, (struct sockaddr *) &dir_sever, sizeof(dir_sever)) < 0) 
-    error("ERROR on binding");
+  if (bind(sock_desc, (struct sockaddr *) &dir_sever, sizeof(dir_sever)) < 0) {
+    perror("bind");
+    return 2;
+  }
 
   //Escucha por peticiones
 
-  listen(sock_desc,2);
+  if (listen(sock_desc,BACKLOG) == -1) {
+    perror("listen");
+    return 3;
+  }
+  
   cliente = sizeof(dir_clien);
 
   //Acepta las peticiones si es que han llegado en un nuevo descriptor
 
-  if (sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente) < 0)
+  if (sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente) != -1)
     error("Error al aceptar");
 
   //Inicializa el buffer "tmp" es zeros
@@ -83,6 +97,8 @@ int main(int argc, char *argv[]) {
   if (write(sock_fd,"Mensaje recibido",16) < 0)
     error("Error escribiendo en el socket");
 
+  printf("Se conectaron desde %s\n", inet_ntoa(dir_clien.sin_addr));
+  send(sock_fd, "Bienvenido a mi servidor!!!\n",26, 0);
   close(sock_fd);
   close(sock_desc);
   return 0;

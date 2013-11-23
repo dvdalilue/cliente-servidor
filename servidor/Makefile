@@ -4,15 +4,16 @@
 #Carnet: 09-10444
 
 CC = gcc
+OPS = -ggdb -O3
 MAIN = main.c
 DEPS = funciones.c
 OBJS = funciones.o main.o
 
 schat: $(OBJS)
-	$(CC) $(MAIN) -o $@ 
+	$(CC) $(OPS) $(MAIN) -o $@ 
 
 %.o: %.c $(DEPS)
-	$(CC) -c $<
+	$(CC) $(OPS) -c $<
 
 check-syntax:
 	$(CC) -o nul -S ${CHK_SOURCES}
