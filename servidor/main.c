@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 
     //Envia un mensaje de respuesta
 
-    if (write(sock_fd,"Mensaje recibido",16) < 0) {
+    if (write(sock_fd,"Mensaje recibido\n",16) < 0) {
       perror("Error escribiendo en el socket");
       return 6;
     }
