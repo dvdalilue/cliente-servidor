@@ -27,6 +27,6 @@ struct Lista {
 typedef struct Caja Data;
 
 /* Prototipos de funciones para Lista.c */
-extern Lista agregar(Lista , Data * );
-extern Lista eliminar(Lista , char * );
+extern Lista agregar_enlista(Lista , Data * );
+extern Lista eliminar_enlista(Lista , char * );
 //Fin Lista.h

@@ -22,7 +22,7 @@ unsigned hash(char *s)
  * Revisa se una entrada se encuentra en el diccionario a partir de su
  * clave.
  */
-struct Diccionario *buscar(char *s)
+struct Diccionario *buscar_enhash(char *s)
 {
 	struct Diccionario *np;
 	for (np = tablahash[hash(s)]; np != NULL; np = np->next)
@@ -34,17 +34,17 @@ struct Diccionario *buscar(char *s)
 /* agregar:
  * Agrega una dupla (clave, valor) al diccionario.
  */
-struct Diccionario *agregar(char *clave, Data *valor)
+struct Diccionario *agregar_enhash(char *clave, Data *valor)
 {
 	struct Diccionario *np;
 	unsigned hashval;
-	if ((np = buscar(clave)) == NULL) { /* not found */
+	if ((np = buscar_enhash(clave)) == NULL) { /* not found */
 		np = (struct Diccionario *) malloc(sizeof(*np));
 		hashval = hash(clave);
 		np->next = tablahash[hashval];
 		tablahash[hashval] = np;
 	} else { /* already there */
-		np->valor = agregar(np->valor, valor);
+		np->valor = agregar_enlista(np->valor, valor);
 	}
 	return np;
 }
@@ -52,7 +52,7 @@ struct Diccionario *agregar(char *clave, Data *valor)
 /* eliminar:
  * Elimina toda una entrada del diccionario a partir de una clave dada.
  */
-struct Diccionario *eliminar(char *clave)
+struct Diccionario *eliminar_enhash(char *clave)
 {
 	struct Diccionario *temp, *np;
 	unsigned hashval;
