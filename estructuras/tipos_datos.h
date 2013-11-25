@@ -1,4 +1,4 @@
-#include "../Lista.h"
+#include "Lista.h"
 
 /* Estructura que representa el conjunto de datos que envia un cliente al
  * servidor.

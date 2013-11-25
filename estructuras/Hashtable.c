@@ -34,7 +34,7 @@ struct Diccionario *buscar_enhash(char *s)
 /* agregar:
  * Agrega una dupla (clave, valor) al diccionario.
  */
-struct Diccionario *agregar_enhash(char *clave, Data *valor)
+struct Diccionario *agregar_enhash(char *clave, Caja *valor)
 {
 	struct Diccionario *np;
 	unsigned hashval;

@@ -5,7 +5,7 @@
 
 CC = gcc
 OPS = -ggdb -O3
-MAIN = main.c
+MAIN = main2.c
 DEPS = funciones.c
 OBJS = funciones.o main.o
 

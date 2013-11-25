@@ -16,17 +16,13 @@ struct Caja {
 	struct Caja *next;
 };
 
-struct Lista {
-	Caja *primero;
-	Caja *ultimo;
-};
-
 /* Definicion de lista para comodidad en el paso
  * de argumentos en funciones/procedimientos
  */
-typedef struct Caja Data;
+typedef struct Caja *Lista;
 
 /* Prototipos de funciones para Lista.c */
-extern Lista agregar_enlista(Lista , Data * );
+extern int buscar_enlista(Lista , Caja *)
+extern Lista agregar_enlista(Lista , Caja * );
 extern Lista eliminar_enlista(Lista , char * );
 //Fin Lista.h
