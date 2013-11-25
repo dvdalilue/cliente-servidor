@@ -12,7 +12,7 @@
  * element : Elemento a agregar.
  * return : La lista con el elemento agregado.
  */
-Lista agregar(Lista l, Data *d) {	
+Lista agregar_enlista(Lista l, Data *d) {	
 	/*Caso lista vacia*/
 	if(l == NULL) {
 		l->primero = d;
@@ -35,7 +35,7 @@ Lista agregar(Lista l, Data *d) {
  * return : La lista l con el elemento eliminado en dado caso, manteniendo
  *			el orden ascendente establecido
  */
-Lista eliminar(Lista l, char *e) {
+Lista eliminar_enlista(Lista l, char *e) {
 	Lista temp1, temp2;
 
 	/*Caso lista vacia*/

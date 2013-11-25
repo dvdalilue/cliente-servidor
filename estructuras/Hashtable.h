@@ -8,12 +8,12 @@ struct Diccionario {
 	Lista valor;
 };
 
-static strcut Diccionario *tablahash[TAMHASH];
+static struct Diccionario *tablahash[TAMHASH];
 
 unsigned hash(char *);
 
-struct Diccionario *buscar(char *);
+struct Diccionario *buscar_enhash(char *);
 
-struct Diccionario *agregar(char *, Data *);
+struct Diccionario *agregar_enhash(char *, Data *);
 
-struct Diccionario *eliminar(char *);
+struct Diccionario *eliminar_enhash(char *);

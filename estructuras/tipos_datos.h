@@ -4,7 +4,9 @@
  * servidor.
  */
 struct CajaUsuario {
+	char *nombre;
+	int user_sockfd;
+	char *mensaje;
 	Lista salas;
 	int tamListaSalas;
-	char *mensaje;
 }
