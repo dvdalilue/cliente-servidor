@@ -45,6 +45,8 @@ int main(int argc, char *argv[]) {
   socklen_t cliente;
   struct sockaddr_in dir_sever, dir_clien;
   char tmp[512];
+  tipoCola *cola;
+  tipoCaja *caja;
 
   //Creacion del socket
 
@@ -59,7 +61,7 @@ int main(int argc, char *argv[]) {
   dir_sever.sin_addr.s_addr = inet_addr("127.0.0.1");//Debe ser cambiado por SALA de alguna forma
   dir_sever.sin_port = htons(puerto);
 
-  //bzero(&(dir_sever.sin_zero),8);
+  bzero(&(dir_sever.sin_zero),8);
 
   //Enlaza el sock descriptor con la direccion del servidor
 
@@ -76,6 +78,7 @@ int main(int argc, char *argv[]) {
   }
   
   cliente = sizeof(dir_clien);
+  cola_inic(&cola);  
 
   while (true) {
 
@@ -85,8 +88,6 @@ int main(int argc, char *argv[]) {
       perror("accept");
       return 4;
     }
-
-    send(sock_fd, "Bienvenido a mi servidor!!!\n",26, 0);
 
     //Inicializa el buffer "tmp" es zeros
 
@@ -99,10 +100,16 @@ int main(int argc, char *argv[]) {
       return 5;
     }
     printf("Mensaje: %s\n",tmp);
+    extrat_cmd(tmp,cola);
 
+    while(!estaVacio(cola)) {
+      desencolar(cola,&caja);
+      printf("pala1: %s\n",(*caja).elem);
+      free(caja);
+    }
     //Envia un mensaje de respuesta
 
-    if (write(sock_fd,"Mensaje recibido\n",16) < 0) {
+    if (send(sock_fd,"Mensaje recibido\n",17,0) < 0) {
       perror("Error escribiendo en el socket");
       return 6;
     }
