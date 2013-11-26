@@ -14,6 +14,8 @@
 *.h~
 *.c.swp
 *.h.swp
+*.swp
+*.swp
 
 # Packages #
 ############
