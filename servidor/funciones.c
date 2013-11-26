@@ -39,31 +39,34 @@ void extrat_cmd(char * mensaje, tipoCola * cola) {
 
   while (mensaje[i] != '\0') {
     j = cp_untilsp(tmp,mensaje,&i);
-    tmp[j+1] = '\0';
-    printf("*********%c\n",mensaje[i]);
+    tmp[j] = '\0';
     if (mensaje[i] == ' ') {
-      i += cp_untilsp(arg,mensaje,&i);
+      i++;
+      j = cp_untilsp(arg,mensaje,&i);
+      arg[j] = '\0';
+    } else {
+      arg[0] = '\0';
     }
-    //printf("palabraaaaaaa: %s\n",tmp);
     encolar(cola,tmp,arg);
     i++;
   }
+}
 
 // Funcion para agregar una sala de chat
 // Las salas de chat se manejaran por Tabla de Hash
 
 // void? puede ser int para que devuelva 0 en caso que si agregue, 1 en caso
 // contrario
-void agregarSala(char *nombre) {
-	// Estructura que describe la sala
-	Caja s;
+/* void agregarSala(char *nombre) { */
+/* 	// Estructura que describe la sala */
+/* 	Caja s; */
 
-	s = malloc(sizeof(Caja));
-	s->nombre = nombre;
-	s->datos = NULL;
+/* 	s = malloc(sizeof(Caja)); */
+/* 	s->nombre = nombre; */
+/* 	s->datos = NULL; */
 
-	agregar_enhash(nombre, e);
-}
+/* 	agregar_enhash(nombre, e); */
+/* } */
 
 // La funcion de eliminar Sala puede ser reemplazada por la de eliminar_enhash
 
@@ -71,27 +74,27 @@ void agregarSala(char *nombre) {
 
 // void? Podria devolver 0 en caso de haberse suscrito con exito y otro valor
 // dependeindo de la situacion que haya podido ocurrir (excepciones).
-void agregarUsuario(char *sala, void *user) {
-	// Estructura que describe a un usuario suscrito a una sala de chat
-	/* Esta estructura contiene:
-	 * - nombre (char *): Nombre del usuario.
-	 * - datos (int): File descriptor del socket por el que se conecto el usuario
-	 */
-	Caja u;
-	CajaUsuario info_u;
-	Diccionario s;
+/* void agregarUsuario(char *sala, void *user) { */
+/* 	// Estructura que describe a un usuario suscrito a una sala de chat */
+/* 	/\* Esta estructura contiene: */
+/* 	 * - nombre (char *): Nombre del usuario. */
+/* 	 * - datos (int): File descriptor del socket por el que se conecto el usuario */
+/* 	 *\/ */
+/* 	Caja u; */
+/* 	CajaUsuario info_u; */
+/* 	Diccionario s; */
 
-	info_u = (CajaUsuario *)user
-	u = malloc(sizeof(Caja));
-	u->nombre = info_u->nombre;
-	u->datos = (int)info_u->user_sockfd;
+/* 	info_u = (CajaUsuario *)user */
+/* 	u = malloc(sizeof(Caja)); */
+/* 	u->nombre = info_u->nombre; */
+/* 	u->datos = (int)info_u->user_sockfd; */
 
-	if((s = buscar_enhash) == NULL)
-		//AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE
-		printf("No se puede encontrar la sala %s",sala);
+/* 	if((s = buscar_enhash) == NULL) */
+/* 		//AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE */
+/* 		printf("No se puede encontrar la sala %s",sala); */
 
-	agregar_enlista(s->valor, u);
-}
+/* 	agregar_enlista(s->valor, u); */
+/* } */
 
 // Funcion para desuscribir a un usuario de las salas en las que se encuentra
 // suscrito
@@ -107,3 +110,4 @@ void eliminarUsuario(void *user) {
 	 *					 suscrito a alguna sala?
 	 */
 }
+

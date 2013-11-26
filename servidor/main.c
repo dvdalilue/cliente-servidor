@@ -11,12 +11,10 @@
 
 int main(int argc, char *argv[]) {
 
-  printf("PID: %d\n",getpid());
-
   //Reconocimiento de opciones de entrada
 
   int i = 1, puerto = 0;
-  char *sala = "vacio";
+  char *sala = "actual";
   
   while (i < argc) {
 
@@ -32,12 +30,11 @@ int main(int argc, char *argv[]) {
     }
     i++;
   }
-  //Si alguno no fue especificado, termina la ejecucion con un mensaje
-  /* if (puerto == 0 || strcmp(sala,"vacio") == 0) { */
-  /*   printf("\n***Falta espesificar algun valor o no se hizo correctamente!!!\n\n"); */
-  /*   exit(0); */
-  /* } */
-
+  // Si alguno no fue especificado, termina la ejecucion con un mensaje
+  if (puerto == 0) {
+    printf("\n***Falta espesificar el puerto!!!***\n\n");
+    exit(0);
+  }
 
   //Declarcion del descriptor del socket y estructuras relevantes
 
@@ -58,7 +55,7 @@ int main(int argc, char *argv[]) {
 
 
   dir_sever.sin_family = AF_INET;
-  dir_sever.sin_addr.s_addr = inet_addr("127.0.0.1");//Debe ser cambiado por SALA de alguna forma
+  dir_sever.sin_addr.s_addr = inet_addr("127.0.0.1");
   dir_sever.sin_port = htons(puerto);
 
   bzero(&(dir_sever.sin_zero),8);
@@ -76,6 +73,8 @@ int main(int argc, char *argv[]) {
     perror("listen");
     return 3;
   }
+
+  printf("Servidor Activo y Escuchando!!\n\n...");
   
   cliente = sizeof(dir_clien);
   cola_inic(&cola);  
@@ -89,24 +88,21 @@ int main(int argc, char *argv[]) {
       return 4;
     }
 
-    //Inicializa el buffer "tmp" es zeros
-
     bzero(tmp, sizeof(tmp));
-
     //Lee del descriptor sock_fd
 
     if (read(sock_fd,tmp,511) < 0) {
       perror("Error leyendo del socket");
       return 5;
     }
-    printf("Mensaje: %s\n",tmp);
     extrat_cmd(tmp,cola);
 
     while(!estaVacio(cola)) {
       desencolar(cola,&caja);
-      printf("pala1: %s\n",(*caja).elem);
-      free(caja);
+      printf("palabras: %s***%s\n",(*caja).elem,(*caja).arg);
+      vaciarCaja(&caja);
     }
+    free(cola);
     //Envia un mensaje de respuesta
 
     if (send(sock_fd,"Mensaje recibido\n",17,0) < 0) {
