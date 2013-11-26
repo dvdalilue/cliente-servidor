@@ -2,6 +2,8 @@
 ###################
 *.o
 *.out
+schat
+cchat
 
 # Input files #
 ###############
