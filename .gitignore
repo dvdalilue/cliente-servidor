@@ -17,7 +17,7 @@ cchat
 *.c.swp
 *.h.swp
 *.swp
-*.swp
+.directory
 
 # Packages #
 ############
