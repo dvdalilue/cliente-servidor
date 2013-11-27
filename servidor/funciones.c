@@ -71,81 +71,81 @@ void extrat_cmd(char * mensaje, tipoCola * cola) {
 // void? Podria devolver 0 en caso de haberse suscrito con exito y otro valor
 // dependeindo de la situacion que haya podido ocurrir (excepciones).
 void agregarUsuario(char *sala, void *user) {
-	// Estructura que describe a un usuario suscrito a una sala de chat
-	/* Esta estructura contiene:
-	 * - nombre (char *): Nombre del usuario.
-	 * - datos (int): File descriptor del socket por el que se conecto el usuario
-	 */
-	Caja u;
-	CajaUsuario info_u;
-	Diccionario s;
+  // Estructura que describe a un usuario suscrito a una sala de chat
+  /* Esta estructura contiene:
+   * - nombre (char *): Nombre del usuario.
+   * - datos (int): File descriptor del socket por el que se conecto el usuario
+   */
+  Caja u;
+  CajaUsuario info_u;
+  Diccionario s;
 
-	info_u = (CajaUsuario *)user
-	// Creacion de estructura que sera agregada en la lista.
-	u = malloc(sizeof(Caja));
-	u->nombre = info_u->nombre;
-	u->datos = (int)info_u->user_sockfd;
+  info_u = (CajaUsuario *)user
+    // Creacion de estructura que sera agregada en la lista.
+    u = malloc(sizeof(Caja));
+  u->nombre = info_u->nombre;
+  u->datos = (int)info_u->user_sockfd;
 
-	if((s = buscar_enhash(sala)) == NULL)
-		//AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE
-		printf("No se puede encontrar la sala %s",sala);
+  if((s = buscar_enhash(sala)) == NULL)
+    //AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE
+    printf("No se puede encontrar la sala %s",sala);
 
-	agregar_enlista(s->valor, u);
-	agregar_enlista(usuarios, u);
+  agregar_enlista(s->valor, u);
+  agregar_enlista(usuarios, u);
 
-	// Se libera la memoria de la estructura agregada en las listas
-	// (En el procedimiento de agregado en listas se realiza una copia de \'esta)
-	free(u);
+  // Se libera la memoria de la estructura agregada en las listas
+  // (En el procedimiento de agregado en listas se realiza una copia de \'esta)
+  free(u);
 }
 
 // Funcion para desuscribir a un usuario de las salas en las que se encuentra
 // suscrito
 void eliminarUsuario(void *user) {
-	/* Estructura del algoritmo:
-	 * 1- De la informacion que se obtenga del usuario, utilizar la lista de
-	 *		salas a la que esta suscrito.
-	 * 2- Crear una serie de procesos paralelos para que busquen en el
-	 *		diccionario las salas en las que esta el usuario
-	 * 3- Eliminar el usuario de las salas a las que pertenece
-	 *
-	 * PREGUNTA: Un usuario puede estar conectado al servidor y no estar
-	 *					 suscrito a alguna sala?
-	 */
+  /* Estructura del algoritmo:
+   * 1- De la informacion que se obtenga del usuario, utilizar la lista de
+   *		salas a la que esta suscrito.
+   * 2- Crear una serie de procesos paralelos para que busquen en el
+   *		diccionario las salas en las que esta el usuario
+   * 3- Eliminar el usuario de las salas a las que pertenece
+   *
+   * PREGUNTA: Un usuario puede estar conectado al servidor y no estar
+   *					 suscrito a alguna sala?
+   */
 
-	CajaUsuario info_u;
-	Diccionario s;
+  CajaUsuario info_u;
+  Diccionario s;
 	
-	info_u = (CajaUsuario *)user;
+  info_u = (CajaUsuario *)user;
 	
-	// Para cada sala en la que un usuario esta suscrito se busca se elimina
-	// su suscripcion
-	for(salas=info_u->salas; salas!=NULL; salas=salas->next)
-		// Se crean procesos hijos que se encarguen de la desuscripcion
-		if(fork() == 0) {
-			if((s = buscar_enhash(salas->nombre)) == NULL)
-				printf("Error al buscar la sala %s.",salas->nombre);
-			// Se obtiene la informacion de la sala de chat
-			eliminar_enlista(s->valor, info_u->nombre);
-		}
+  // Para cada sala en la que un usuario esta suscrito se busca se elimina
+  // su suscripcion
+  for(salas=info_u->salas; salas!=NULL; salas=salas->next)
+    // Se crean procesos hijos que se encarguen de la desuscripcion
+    if(fork() == 0) {
+      if((s = buscar_enhash(salas->nombre)) == NULL)
+        printf("Error al buscar la sala %s.",salas->nombre);
+      // Se obtiene la informacion de la sala de chat
+      eliminar_enlista(s->valor, info_u->nombre);
+    }
 
-	// Se eliminan las salas a las que el usuario estaba suscrito
-	info_u->salas = NULL;
+  // Se eliminan las salas a las que el usuario estaba suscrito
+  info_u->salas = NULL;
 }
 
 // Procedimiento que muestra en pantalla la lista de salas de chat en el
 // servidor
 void listarSalas() {
-	for(i=0; i<TAMHASH; i++)
-		if(tablahash[i]!=NULL && fork()==0)
-			for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next)
-				print("%s\n",sala->nombre);
+  for(i=0; i<TAMHASH; i++)
+    if(tablahash[i]!=NULL && fork()==0)
+      for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next)
+        print("%s\n",sala->nombre);
 }
 
 // Procedimiento que muestra en pantalla la lista de usuarios conectados al
 // servidor
 void listarUsuarios() {
-	for(u=usuarios; u!=NULL; u=u->next)
-		printf("%s\n");
+  for(u=usuarios; u!=NULL; u=u->next)
+    printf("%s\n");
 }
 
 void manejador_cmd (tipoCaja * caja) {
