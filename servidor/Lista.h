@@ -23,7 +23,7 @@ typedef struct Caja *Lista;
 typedef struct Caja Caja;
 
 /* Prototipos de funciones para Lista.c */
-extern int buscar_enlista(Lista , struct Caja *);
-extern Lista agregar_enlista(Lista , struct Caja * );
+extern int buscar_enlista(Lista , Caja *);
+extern Lista agregar_enlista(Lista , Caja * );
 extern Lista eliminar_enlista(Lista , char * );
 //Fin Lista.h

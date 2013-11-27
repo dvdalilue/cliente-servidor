@@ -8,5 +8,11 @@
 #include "funciones.h"
 
 int main(int argc, char *argv[]) {
-	agregar_enhash("hola");
+	Lista l;
+	Caja *c;
+	l = NULL;
+	c = (Caja *)malloc(sizeof(Caja));
+	c->nombre = "Lilue";
+	c->datos = NULL;
+	agregar_enlista(l,c);
 }
