@@ -74,13 +74,12 @@ int main(int argc, char *argv[]) {
     return 3;
   }
 
-  printf("Servidor Activo y Escuchando!!\n\n...");
+  printf("Servidor Activo y Escuchando!!\n\n");
   
   cliente = sizeof(dir_clien);
   cola_inic(&cola);  
 
   while (true) {
-
     //Acepta las peticiones si es que han llegado en un nuevo descriptor
 
     if ((sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente)) == -1) {
@@ -99,7 +98,7 @@ int main(int argc, char *argv[]) {
 
     while(!estaVacio(cola)) {
       desencolar(cola,&caja);
-      printf("palabras: %s***%s\n",(*caja).elem,(*caja).arg);
+      manejador_cmd(caja);
       vaciarCaja(&caja);
     }
     free(cola);
