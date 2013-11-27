@@ -68,13 +68,13 @@ int main(int argc, char *argv[]) {
   cliente = sizeof(dir_clien);
   cola_inic(&cola);  
 
-  while (true) {
-    //Acepta las peticiones si es que han llegado en un nuevo descriptor
-    if ((sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente)) == -1) {
-      perror("accept");
-      return 4;
-    }
+  //Acepta las peticiones si es que han llegado en un nuevo descriptor
+  if ((sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente)) == -1) {
+    perror("accept");
+    return 4;
+  }
 
+  while (true) {
     bzero(tmp, sizeof(tmp));
     //Lee del descriptor sock_fd
     if (read(sock_fd,tmp,511) < 0) {
@@ -83,25 +83,24 @@ int main(int argc, char *argv[]) {
     }
     if (tmp[0] != 0) {
       extrat_cmd(tmp,cola);
-
+      bzero(tmp, sizeof(tmp));
       while(!estaVacio(cola)) {
         desencolar(cola,&caja);
-        manejador_cmd(caja);
+        manejador_cmd(caja,tmp);
         vaciarCaja(&caja);
       }
-      free(cola);
-      //Envia un mensaje de respuesta
-      if (send(sock_fd,"Mensaje recibido\n",17,0) < 0) {
+      if (strcmp(tmp,"fue") == 0) {
+        send(sock_fd,"fue\0",4,0);
+      } else if (send(sock_fd,"Informacion recibida\n",21,0) < 0) {
         perror("Error escribiendo en el socket");
         return 6;
       }
-    } else {
-      if (send(sock_fd,"No hubo ningun mensaje\n",23,0) < 0) {
-        perror("Error escribiendo en el socket");
-        return 6;
-      }
+    } else if (send(sock_fd,"No hubo ningun mensaje\n",23,0) < 0) {
+      perror("Error escribiendo en el socket");
+      return 6;
     }
   }
+  free(cola);
   close(sock_fd);
   close(sock_desc);
   return 0;

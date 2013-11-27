@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
@@ -10,7 +8,7 @@
 int main(int argc, char *argv[]) {
 
   int i = 1, puerto = -1;
-  char *host = "vacio", *nombre = "vacio", *archivo = "vacio";
+  char *host = "127.0.0.1", *nombre = "vacio", *archivo = "vacio";
   
   while (i < argc) {
     if ((strcmp(argv[i],"-h") == 0) && (argv[i+1] != NULL)) {
@@ -44,14 +42,10 @@ int main(int argc, char *argv[]) {
 
   // Creamos el socket
   if ((s = socket(AF_INET,SOCK_STREAM,0)) != -1) {
-
-    //printf("%d*****%d\n",gethostbyname(host),inet_addr("127.0.0.1"));
-
     //Asigna un nombre local al socket
-    //if ((bind(s,(struct sockaddr*)&bs, sizeof(struct sockaddr))) != -1) {
     //Se prepara el nombre de la máquina remota
     des.sin_family = AF_INET;
-    des.sin_addr.s_addr = inet_addr("127.0.0.1");
+    des.sin_addr.s_addr = inet_addr(host);
     des.sin_port = htons(puerto);
 
     //Establece la conexión con la máquina remota
@@ -59,16 +53,31 @@ int main(int argc, char *argv[]) {
       perror("connect");
       return 3;
     }
-
     bzero(&men,sizeof(men));
-
     read_file(men,archivo);
-
     //Envía el mensaje
     send(s,men,511,0);
+
     //Recibe la respuesta
-    recv(s,resp, sizeof(resp) ,0);
+    read(s,resp, sizeof(resp));
     printf("<-Recibido: %s\n",resp);
+
+    while (true) {
+      bzero(&men,sizeof(men));
+      printf("Introduzca el Comando:$ ");
+      fgets(men, sizeof(men), stdin);
+      if (send(s,men,511,0) < 0) {
+        printf("error\n");
+      }
+      //Recibe la respuesta
+      bzero(&resp,sizeof(resp));
+      read(s,resp, sizeof(resp));
+      if (strcmp(resp,"fue") == 0) {
+        break;
+      }
+      printf("<-Recibido: %s\n",resp);
+    }
+
     //Se cierra la conexión (socket)
     close(s);
   } else {

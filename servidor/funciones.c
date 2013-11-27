@@ -76,26 +76,26 @@ void agregarUsuario(char *sala, void *user) {
    * - nombre (char *): Nombre del usuario.
    * - datos (int): File descriptor del socket por el que se conecto el usuario
    */
-  Caja u;
-  CajaUsuario info_u;
-  Diccionario s;
+  /* Caja u; */
+  /* CajaUsuario info_u; */
+  /* Diccionario s; */
 
-  info_u = (CajaUsuario *)user
-    // Creacion de estructura que sera agregada en la lista.
-    u = malloc(sizeof(Caja));
-  u->nombre = info_u->nombre;
-  u->datos = (int)info_u->user_sockfd;
+  /* info_u = (CajaUsuario *)user */
+  /*   // Creacion de estructura que sera agregada en la lista. */
+  /*   u = malloc(sizeof(Caja)); */
+  /* u->nombre = info_u->nombre; */
+  /* u->datos = (int)info_u->user_sockfd; */
 
-  if((s = buscar_enhash(sala)) == NULL)
-    //AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE
-    printf("No se puede encontrar la sala %s",sala);
+  /* if((s = buscar_enhash(sala)) == NULL) */
+  /*   //AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE */
+  /*   printf("No se puede encontrar la sala %s",sala); */
 
-  agregar_enlista(s->valor, u);
-  agregar_enlista(usuarios, u);
+  /* agregar_enlista(s->valor, u); */
+  /* agregar_enlista(usuarios, u); */
 
-  // Se libera la memoria de la estructura agregada en las listas
-  // (En el procedimiento de agregado en listas se realiza una copia de \'esta)
-  free(u);
+  /* // Se libera la memoria de la estructura agregada en las listas */
+  /* // (En el procedimiento de agregado en listas se realiza una copia de \'esta) */
+  /* free(u); */
 }
 
 // Funcion para desuscribir a un usuario de las salas en las que se encuentra
@@ -112,43 +112,43 @@ void eliminarUsuario(void *user) {
    *					 suscrito a alguna sala?
    */
 
-  CajaUsuario info_u;
-  Diccionario s;
+  /* CajaUsuario info_u; */
+  /* Diccionario s; */
 	
-  info_u = (CajaUsuario *)user;
+  /* info_u = (CajaUsuario *)user; */
 	
-  // Para cada sala en la que un usuario esta suscrito se busca se elimina
-  // su suscripcion
-  for(salas=info_u->salas; salas!=NULL; salas=salas->next)
-    // Se crean procesos hijos que se encarguen de la desuscripcion
-    if(fork() == 0) {
-      if((s = buscar_enhash(salas->nombre)) == NULL)
-        printf("Error al buscar la sala %s.",salas->nombre);
-      // Se obtiene la informacion de la sala de chat
-      eliminar_enlista(s->valor, info_u->nombre);
-    }
+  /* // Para cada sala en la que un usuario esta suscrito se busca se elimina */
+  /* // su suscripcion */
+  /* for(salas=info_u->salas; salas!=NULL; salas=salas->next) */
+  /*   // Se crean procesos hijos que se encarguen de la desuscripcion */
+  /*   if(fork() == 0) { */
+  /*     if((s = buscar_enhash(salas->nombre)) == NULL) */
+  /*       printf("Error al buscar la sala %s.",salas->nombre); */
+  /*     // Se obtiene la informacion de la sala de chat */
+  /*     eliminar_enlista(s->valor, info_u->nombre); */
+  /*   } */
 
-  // Se eliminan las salas a las que el usuario estaba suscrito
-  info_u->salas = NULL;
+  /* // Se eliminan las salas a las que el usuario estaba suscrito */
+  /* info_u->salas = NULL; */
 }
 
 // Procedimiento que muestra en pantalla la lista de salas de chat en el
 // servidor
-void listarSalas() {
-  for(i=0; i<TAMHASH; i++)
-    if(tablahash[i]!=NULL && fork()==0)
-      for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next)
-        print("%s\n",sala->nombre);
-}
+/* void listarSalas() { */
+/*   for(i=0; i<TAMHASH; i++) */
+/*     if(tablahash[i]!=NULL && fork()==0) */
+/*       for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next) */
+/*         print("%s\n",sala->nombre); */
+/* } */
 
-// Procedimiento que muestra en pantalla la lista de usuarios conectados al
-// servidor
-void listarUsuarios() {
-  for(u=usuarios; u!=NULL; u=u->next)
-    printf("%s\n");
-}
+/* // Procedimiento que muestra en pantalla la lista de usuarios conectados al */
+/* // servidor */
+/* void listarUsuarios() { */
+/*   for(u=usuarios; u!=NULL; u=u->next) */
+/*     printf("%s\n"); */
+/* } */
 
-void manejador_cmd (tipoCaja * caja) {
+void manejador_cmd (tipoCaja * caja, char * tmp) {
   
   if (strcmp((*caja).elem,"sal") == 0) {
     printf("Comando: %s\n",(*caja).elem);
@@ -169,8 +169,10 @@ void manejador_cmd (tipoCaja * caja) {
     printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);
   }
   else if (strcmp((*caja).elem,"eli") == 0) {
-    printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);  }
+    printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);  
+  }
   else if (strcmp((*caja).elem,"fue") == 0) {
+    strcpy(tmp, "fue\0");
     printf("Comando: %s\n",(*caja).elem);
   } else {
     printf("Comando invalido\n");
