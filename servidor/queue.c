@@ -20,10 +20,27 @@ int estaVacio(tipoCola *c) {
     return 0;
 }
 
+void cpstr (char * str1, char * str2) {
+  int i = 0;
+  while (str2[i] != '\0') {
+    str1[i] = str2[i];
+    i++;
+  }
+  str1[i] = str2[i];
+}
+
+void vaciarCaja (tipoCaja ** caja) {
+  free((*(*caja)).elem);
+  free((*(*caja)).arg);
+  free((*caja));
+}
+
 void encolar (tipoCola* c, char* str, char* str2) {
   tipoCaja* aux = (tipoCaja*) malloc (sizeof(tipoCaja));
-  (*aux).elem = str;
-  (*aux).arg = str2;
+  (*aux).elem = (char *) malloc (sizeof(str));
+  (*aux).arg = (char *) malloc (sizeof(str2));
+  cpstr((*aux).elem, str);
+  cpstr((*aux).arg, str2);
   (*aux).siguiente = NULL;
 
   if ((*c).cantidad == 0) {

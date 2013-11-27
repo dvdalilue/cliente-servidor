@@ -18,6 +18,8 @@ typedef struct _cola {
 
 void cola_inic (tipoCola** c);
 int estaVacio (tipoCola* c);
+void cpstr (char * str1, char * str2);
+void vaciarCaja (tipoCaja ** caja);
 void encolar (tipoCola* c, char* str, char * str2);
 void desencolar (tipoCola* c, tipoCaja ** caja);
 
