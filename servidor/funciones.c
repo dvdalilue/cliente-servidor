@@ -113,22 +113,22 @@ void eliminarUsuario(void *user) {
 	CajaUsuario *info_u;
 	Diccionario *s;
 	Lista salas;
-	
+  
 	info_u = (CajaUsuario *)user;
 	
-	// Para cada sala en la que un usuario esta suscrito se busca se elimina
-	// su suscripcion
-	for(salas=info_u->salas; salas!=NULL; salas=salas->next)
-		// Se crean procesos hijos que se encarguen de la desuscripcion
-		if(fork() == 0) {
-			if((s = buscar_enhash(salas->nombre)) == NULL)
-				printf("Error al buscar la sala %s.",salas->nombre);
-			// Se obtiene la informacion de la sala de chat
-			eliminar_enlista(s->valor, info_u->nombre);
-		}
+  // Para cada sala en la que un usuario esta suscrito se busca se elimina
+  // su suscripcion
+  for(salas=info_u->salas; salas!=NULL; salas=salas->next)
+    // Se crean procesos hijos que se encarguen de la desuscripcion
+    if(fork() == 0) {
+      if((s = buscar_enhash(salas->nombre)) == NULL)
+        printf("Error al buscar la sala %s.",salas->nombre);
+      // Se obtiene la informacion de la sala de chat
+      eliminar_enlista(s->valor, info_u->nombre);
+    }
 
-	// Se eliminan las salas a las que el usuario estaba suscrito
-	info_u->salas = NULL;
+  // Se eliminan las salas a las que el usuario estaba suscrito
+  info_u->salas = NULL;
 }
 
 // Procedimiento que muestra en pantalla la lista de salas de chat en el
