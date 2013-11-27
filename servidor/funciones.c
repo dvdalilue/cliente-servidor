@@ -1,9 +1,7 @@
-#include <stdbool.h>
-#include <stdio.h>
 #include "funciones.h"
 
-extern tablahash;
-extern usuarios;
+extern Diccionario *tablahash[TAMHASH];
+extern Lista usuarios;
 
 //// Funcion que verifica si un archivo existe /////
 //// en el directorio, retornando true en acierto /////
@@ -76,15 +74,15 @@ void agregarUsuario(char *sala, void *user) {
 	 * - nombre (char *): Nombre del usuario.
 	 * - datos (int): File descriptor del socket por el que se conecto el usuario
 	 */
-	Caja u;
-	CajaUsuario info_u;
-	Diccionario s;
+	Caja *u;
+	CajaUsuario *info_u;
+	Diccionario *s;
 
-	info_u = (CajaUsuario *)user
+	info_u = (CajaUsuario *)user;
 	// Creacion de estructura que sera agregada en la lista.
-	u = malloc(sizeof(Caja));
+	u = (Caja *)malloc(sizeof(Caja));
 	u->nombre = info_u->nombre;
-	u->datos = (int)info_u->user_sockfd;
+	u->datos = (void *)info_u->user_sockfd;
 
 	if((s = buscar_enhash(sala)) == NULL)
 		//AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE
@@ -112,8 +110,9 @@ void eliminarUsuario(void *user) {
 	 *					 suscrito a alguna sala?
 	 */
 
-	CajaUsuario info_u;
-	Diccionario s;
+	CajaUsuario *info_u;
+	Diccionario *s;
+	Lista salas;
 	
 	info_u = (CajaUsuario *)user;
 	
@@ -135,6 +134,12 @@ void eliminarUsuario(void *user) {
 // Procedimiento que muestra en pantalla la lista de salas de chat en el
 // servidor
 void listarSalas() {
+	int i;
+	Lista sala;
+
+	for(i=0; i<TAMHASH; i++)
+		tablahash[i]->valor = NULL;
+
 	for(i=0; i<TAMHASH; i++)
 		if(tablahash[i]!=NULL && fork()==0)
 			for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next)
@@ -144,8 +149,9 @@ void listarSalas() {
 // Procedimiento que muestra en pantalla la lista de usuarios conectados al
 // servidor
 void listarUsuarios() {
+	Lista u;
 	for(u=usuarios; u!=NULL; u=u->next)
-		printf("%s\n");
+		printf("%s\n",u->nombre);
 }
 
 void manejador_cmd (tipoCaja * caja) {
