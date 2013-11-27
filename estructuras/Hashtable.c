@@ -34,19 +34,23 @@ struct Diccionario *buscar_enhash(char *s)
 /* agregar:
  * Agrega una dupla (clave, valor) al diccionario.
  */
-struct Diccionario *agregar_enhash(char *clave, Caja *valor)
+struct Diccionario *agregar_enhash(char *clave)
 {
 	struct Diccionario *np;
 	unsigned hashval;
+	hashval = hash(clave);
+
 	if ((np = buscar_enhash(clave)) == NULL) { /* not found */
+		//Se crea la entrada del diccionario
 		np = (struct Diccionario *) malloc(sizeof(*np));
-		hashval = hash(clave);
+		np->clave = clave;
 		np->next = tablahash[hashval];
 		tablahash[hashval] = np;
 	} else { /* already there */
-		np->valor = agregar_enlista(np->valor, valor);
+		np->next = tablahash[hashval];
+		tablahash[hashval] = np;
 	}
-	return np;
+	return tablahash[hashval];
 }
 
 /* eliminar:

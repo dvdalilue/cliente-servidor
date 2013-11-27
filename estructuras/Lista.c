@@ -6,7 +6,6 @@
 
 #include "Lista.h"
 
-
 /* Busca un elemento en la lista
  * param:
  * l : Lista en la que se realizara la busqueda

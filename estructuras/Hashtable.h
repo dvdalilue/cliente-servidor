@@ -14,6 +14,6 @@ unsigned hash(char *);
 
 struct Diccionario *buscar_enhash(char *);
 
-struct Diccionario *agregar_enhash(char *, Caja *);
+struct Diccionario *agregar_enhash(char *);
 
 struct Diccionario *eliminar_enhash(char *);

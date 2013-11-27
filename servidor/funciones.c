@@ -3,6 +3,7 @@
 #include "funciones.h"
 
 extern tablahash;
+extern usuarios;
 
 //// Funcion que verifica si un archivo existe /////
 //// en el directorio, retornando true en acierto /////
@@ -49,21 +50,7 @@ void extrat_cmd(char * mensaje, tipoCola * cola) {
     i++;
   }
 
-// Funcion para agregar una sala de chat
-// Las salas de chat se manejaran por Tabla de Hash
-
-// void? puede ser int para que devuelva 0 en caso que si agregue, 1 en caso
-// contrario
-void agregarSala(char *nombre) {
-	// Estructura que describe la sala
-	Caja s;
-
-	s = malloc(sizeof(Caja));
-	s->nombre = nombre;
-	s->datos = NULL;
-
-	agregar_enhash(nombre, e);
-}
+// La funcion de agregar Sala puede ser reemplazada por la de agregar_enhash
 
 // La funcion de eliminar Sala puede ser reemplazada por la de eliminar_enhash
 
@@ -82,15 +69,21 @@ void agregarUsuario(char *sala, void *user) {
 	Diccionario s;
 
 	info_u = (CajaUsuario *)user
+	// Creacion de estructura que sera agregada en la lista.
 	u = malloc(sizeof(Caja));
 	u->nombre = info_u->nombre;
 	u->datos = (int)info_u->user_sockfd;
 
-	if((s = buscar_enhash) == NULL)
+	if((s = buscar_enhash(sala)) == NULL)
 		//AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE
 		printf("No se puede encontrar la sala %s",sala);
 
 	agregar_enlista(s->valor, u);
+	agregar_enlista(usuarios, u);
+
+	// Se libera la memoria de la estructura agregada en las listas
+	// (En el procedimiento de agregado en listas se realiza una copia de \'esta)
+	free(u);
 }
 
 // Funcion para desuscribir a un usuario de las salas en las que se encuentra
@@ -106,4 +99,39 @@ void eliminarUsuario(void *user) {
 	 * PREGUNTA: Un usuario puede estar conectado al servidor y no estar
 	 *					 suscrito a alguna sala?
 	 */
+
+	CajaUsuario info_u;
+	Diccionario s;
+	
+	info_u = (CajaUsuario *)user;
+	
+	// Para cada sala en la que un usuario esta suscrito se busca se elimina
+	// su suscripcion
+	for(salas=info_u->salas; salas!=NULL; salas=salas->next)
+		// Se crean procesos hijos que se encarguen de la desuscripcion
+		if(fork() == 0) {
+			if((s = buscar_enhash(salas->nombre)) == NULL)
+				printf("Error al buscar la sala %s.",salas->nombre);
+			// Se obtiene la informacion de la sala de chat
+			eliminar_enlista(s->valor, info_u->nombre);
+		}
+
+	// Se eliminan las salas a las que el usuario estaba suscrito
+	info_u->salas = NULL;
+}
+
+// Procedimiento que muestra en pantalla la lista de salas de chat en el
+// servidor
+void listarSalas() {
+	for(i=0; i<TAMHASH; i++)
+		if(tablahash[i]!=NULL && fork()==0)
+			for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next)
+				print("%s\n",sala->nombre);
+}
+
+// Procedimiento que muestra en pantalla la lista de usuarios conectados al
+// servidor
+void listarUsuarios() {
+	for(u=usuarios; u!=NULL; u=u->next)
+		printf("%s\n");
 }
