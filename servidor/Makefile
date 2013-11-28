@@ -6,8 +6,8 @@
 CC = gcc
 OPS = -ggdb -O3
 MAIN = main2.c
-DEPS = funciones.h Hashtable.h Lista.h queue.h
-OBJS = funciones.o Hashtable.o Lista.o queue.o main2.o
+DEPS = Lista.h Hashtable.h queue.h funciones.h
+OBJS = Lista.o Hashtable.o queue.o funciones.o main2.o
 
 schat: $(OBJS)
 	$(CC) $(OPS) $(MAIN) -o $@ 

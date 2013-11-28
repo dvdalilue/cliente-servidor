@@ -1,5 +1,9 @@
-#include "Lista.h"
+#ifndef FicheroLista
+	#include "Lista.h"
+	#define FicheroLista
+#endif
 
+#define FicheroHashtable
 #define TAMHASH 101
 typedef struct Diccionario Diccionario;
 
@@ -9,7 +13,7 @@ struct Diccionario {
 	Lista valor;
 };
 
-extern Diccionario *tablahash[TAMHASH];
+//extern Diccionario *tablahash[TAMHASH];
 
 unsigned hash(char *);
 extern Diccionario *buscar_enhash(char *);

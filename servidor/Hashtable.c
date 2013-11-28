@@ -6,7 +6,7 @@
 **************************/
 
 #include "Hashtable.h"
-extern struct Diccionario *tablahash[TAMHASH];
+Diccionario *tablahash[TAMHASH];
 
 /* hash:
  * Obtiene el codigo hash de una cadena de caracteres
@@ -23,7 +23,7 @@ unsigned hash(char *s)
  * Revisa se una entrada se encuentra en el diccionario a partir de su
  * clave.
  */
-struct Diccionario *buscar_enhash(char *s)
+Diccionario *buscar_enhash(char *s)
 {
 	struct Diccionario *np;
 	for (np = tablahash[hash(s)]; np != NULL; np = np->next)
@@ -35,7 +35,7 @@ struct Diccionario *buscar_enhash(char *s)
 /* agregar:
  * Agrega una dupla (clave, valor) al diccionario.
  */
-struct Diccionario *agregar_enhash(char *clave)
+Diccionario *agregar_enhash(char *clave)
 {
 	struct Diccionario *np;
 	unsigned hashval;
@@ -57,7 +57,7 @@ struct Diccionario *agregar_enhash(char *clave)
 /* eliminar:
  * Elimina toda una entrada del diccionario a partir de una clave dada.
  */
-struct Diccionario *eliminar_enhash(char *clave)
+Diccionario *eliminar_enhash(char *clave)
 {
 	struct Diccionario *temp, *np;
 	unsigned hashval;

@@ -1,7 +1,7 @@
 #include "funciones.h"
 
 extern Diccionario *tablahash[TAMHASH];
-extern Lista usuarios;
+Lista usuarios;
 
 //// Funcion que verifica si un archivo existe /////
 //// en el directorio, retornando true en acierto /////
@@ -127,7 +127,7 @@ void eliminarUsuario(void *user) {
       eliminar_enlista(s->valor, info_u->nombre);
     }
 
-  // Se eliminan las salas a las que el usuario estaba suscrito
+  // Se eliminan las salas a las queinclude in c el usuario estaba suscrito
   info_u->salas = NULL;
 }
 
@@ -135,15 +135,14 @@ void eliminarUsuario(void *user) {
 // servidor
 void listarSalas() {
 	int i;
-	Lista sala;
+	Diccionario *sala;
 
 	for(i=0; i<TAMHASH; i++)
-		tablahash[i]->valor = NULL;
-
-	for(i=0; i<TAMHASH; i++)
-		if(tablahash[i]!=NULL && fork()==0)
-			for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next)
-				print("%s\n",sala->nombre);
+		if(tablahash[i]!=NULL && fork()==0) {
+			for(sala=tablahash[i]; sala!=NULL; sala=sala->next)
+				printf("%s\n",sala->clave);
+			exit(0);
+		}
 }
 
 // Procedimiento que muestra en pantalla la lista de usuarios conectados al

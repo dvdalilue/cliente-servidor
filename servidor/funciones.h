@@ -1,7 +1,9 @@
 #include <stdbool.h>
-#include "Hashtable.h"
-#include "tipos_datos.h"
 #include "queue.c"
+#ifndef FicheroHashtable
+	#include "Hashtable.h"
+	#define FicheroHashtable
+#endif
 
 bool file_exists(char * filename);
 int cp_untilsp (char * arr1, char * arr2, int * ini);

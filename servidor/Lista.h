@@ -7,6 +7,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#define FicheroLista
 
 /* Representacion de una Caja de la lista.
  */
@@ -21,6 +22,16 @@ struct Caja {
  */
 typedef struct Caja *Lista;
 typedef struct Caja Caja;
+
+struct CajaUsuario {
+	char *nombre;
+	int user_sockfd;
+	char *mensaje;
+	Lista salas;
+	int tamListaSalas;
+};
+
+typedef struct CajaUsuario CajaUsuario;
 
 /* Prototipos de funciones para Lista.c */
 extern int buscar_enlista(Lista , Caja *);
