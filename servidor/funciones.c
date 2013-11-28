@@ -1,9 +1,7 @@
-#include <stdbool.h>
-#include <stdio.h>
 #include "funciones.h"
 
-extern tablahash;
-extern usuarios;
+extern Diccionario *tablahash[TAMHASH];
+extern Lista usuarios;
 
 //// Funcion que verifica si un archivo existe /////
 //// en el directorio, retornando true en acierto /////
@@ -71,36 +69,37 @@ void extrat_cmd(char * mensaje, tipoCola * cola) {
 // void? Podria devolver 0 en caso de haberse suscrito con exito y otro valor
 // dependeindo de la situacion que haya podido ocurrir (excepciones).
 void agregarUsuario(char *sala, void *user) {
-  // Estructura que describe a un usuario suscrito a una sala de chat
-  /* Esta estructura contiene:
-   * - nombre (char *): Nombre del usuario.
-   * - datos (int): File descriptor del socket por el que se conecto el usuario
-   */
-  /* Caja u; */
-  /* CajaUsuario info_u; */
-  /* Diccionario s; */
+	// Estructura que describe a un usuario suscrito a una sala de chat
+	/* Esta estructura contiene:
+	 * - nombre (char *): Nombre del usuario.
+	 * - datos (int): File descriptor del socket por el que se conecto el usuario
+	 */
+	Caja *u;
+	CajaUsuario *info_u;
+	Diccionario *s;
 
-  /* info_u = (CajaUsuario *)user */
-  /*   // Creacion de estructura que sera agregada en la lista. */
-  /*   u = malloc(sizeof(Caja)); */
-  /* u->nombre = info_u->nombre; */
-  /* u->datos = (int)info_u->user_sockfd; */
+	info_u = (CajaUsuario *)user;
+	// Creacion de estructura que sera agregada en la lista.
+	u = (Caja *)malloc(sizeof(Caja));
+	u->nombre = info_u->nombre;
+	u->datos = (void *)info_u->user_sockfd;
 
-  /* if((s = buscar_enhash(sala)) == NULL) */
-  /*   //AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE */
-  /*   printf("No se puede encontrar la sala %s",sala); */
+	if((s = buscar_enhash(sala)) == NULL)
+		//AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE
+		printf("No se puede encontrar la sala %s",sala);
 
-  /* agregar_enlista(s->valor, u); */
-  /* agregar_enlista(usuarios, u); */
+	agregar_enlista(s->valor, u);
+	agregar_enlista(usuarios, u);
 
-  /* // Se libera la memoria de la estructura agregada en las listas */
-  /* // (En el procedimiento de agregado en listas se realiza una copia de \'esta) */
-  /* free(u); */
+	// Se libera la memoria de la estructura agregada en las listas
+	// (En el procedimiento de agregado en listas se realiza una copia de \'esta)
+	free(u);
 }
 
 // Funcion para desuscribir a un usuario de las salas en las que se encuentra
 // suscrito
 void eliminarUsuario(void *user) {
+ 
   /* Estructura del algoritmo:
    * 1- De la informacion que se obtenga del usuario, utilizar la lista de
    *		salas a la que esta suscrito.
@@ -112,10 +111,11 @@ void eliminarUsuario(void *user) {
    *					 suscrito a alguna sala?
    */
 
-  /* CajaUsuario info_u; */
-  /* Diccionario s; */
-	
-  /* info_u = (CajaUsuario *)user; */
+  CajaUsuario *info_u;
+  Diccionario *s;
+  Lista salas;
+  
+  info_u = (CajaUsuario *)user;
 	
   /* // Para cada sala en la que un usuario esta suscrito se busca se elimina */
   /* // su suscripcion */
@@ -147,6 +147,28 @@ void eliminarUsuario(void *user) {
 /*   for(u=usuarios; u!=NULL; u=u->next) */
 /*     printf("%s\n"); */
 /* } */
+
+void listarSalas() {
+  int i;
+  Lista sala;
+
+  for(i=0; i<TAMHASH; i++)
+    tablahash[i]->valor = NULL;
+
+  for(i=0; i<TAMHASH; i++)
+    if(tablahash[i]!=NULL && fork()==0)
+      for(sala=tablahash[i]->valor; sala!=NULL; sala=sala->next)
+        print("%s\n",sala->nombre);
+}
+
+// Procedimiento que muestra en pantalla la lista de usuarios conectados al
+// servidor
+void listarUsuarios() {
+  Lista u;
+  for(u=usuarios; u!=NULL; u=u->next)
+    printf("%s\n",u->nombre);
+}
+
 
 void manejador_cmd (tipoCaja * caja, char * tmp) {
   
