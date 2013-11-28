@@ -6,71 +6,71 @@
 **************************/
 
 #include "Hashtable.h"
-extern struct Diccionario *tablahash[TAMHASH];
+extern Diccionario *tablahash[TAMHASH];
 
 /* hash:
  * Obtiene el codigo hash de una cadena de caracteres
  */
 unsigned hash(char *s)
 {
-	unsigned hashval;
-	for (hashval = 0; *s != '\0'; s++)
-		hashval = *s + 31 * hashval;
-	return hashval % TAMHASH;
+  unsigned hashval;
+  for (hashval = 0; *s != '\0'; s++)
+    hashval = *s + 31 * hashval;
+  return hashval % TAMHASH;
 }
 
 /* lookup:
  * Revisa se una entrada se encuentra en el diccionario a partir de su
  * clave.
  */
-struct Diccionario *buscar_enhash(char *s)
+Diccionario *buscar_enhash(char *s)
 {
-	struct Diccionario *np;
-	for (np = tablahash[hash(s)]; np != NULL; np = np->next)
-		if (strcmp(s, np->clave) == 0)
-			return np; /* found */
-	return NULL; /* not found */
+  Diccionario *np;
+  for (np = tablahash[hash(s)]; np != NULL; np = np->next)
+    if (strcmp(s, np->clave) == 0)
+      return np; /* found */
+  return NULL; /* not found */
 }
 
 /* agregar:
  * Agrega una dupla (clave, valor) al diccionario.
  */
-struct Diccionario *agregar_enhash(char *clave)
+Diccionario *agregar_enhash(char *clave)
 {
-	struct Diccionario *np;
-	unsigned hashval;
-	hashval = hash(clave);
+  Diccionario *np;
+  unsigned hashval;
+  hashval = hash(clave);
 
-	if ((np = buscar_enhash(clave)) == NULL) { /* not found */
-		//Se crea la entrada del diccionario
-		np = (struct Diccionario *) malloc(sizeof(*np));
-		np->clave = clave;
-		np->next = tablahash[hashval];
-		tablahash[hashval] = np;
-	} else { /* already there */
-		np->next = tablahash[hashval];
-		tablahash[hashval] = np;
-	}
-	return tablahash[hashval];
+  if ((np = buscar_enhash(clave)) == NULL) { /* not found */
+    //Se crea la entrada del diccionario
+    np = (Diccionario *) malloc(sizeof(*np));
+    np->clave = clave;
+    np->next = tablahash[hashval];
+    tablahash[hashval] = np;
+  } else { /* already there */
+    np->next = tablahash[hashval];
+    tablahash[hashval] = np;
+  }
+  return tablahash[hashval];
 }
 
 /* eliminar:
  * Elimina toda una entrada del diccionario a partir de una clave dada.
  */
-struct Diccionario *eliminar_enhash(char *clave)
+Diccionario *eliminar_enhash(char *clave)
 {
-	struct Diccionario *temp, *np;
-	unsigned hashval;
+  Diccionario *temp, *np;
+  unsigned hashval;
 
-	if((np = buscar_enhash(clave)) != NULL) {
-		temp = np;
-		np = np->next;
-		hashval = hash(clave);
-		tablahash[hashval] = np;
-		free(temp);
-	}
-	else
-		return NULL;
+  if((np = buscar_enhash(clave)) != NULL) {
+    temp = np;
+    np = np->next;
+    hashval = hash(clave);
+    tablahash[hashval] = np;
+    free(temp);
+  }
+  else
+    return NULL;
 
-	return np;
+  return np;
 }
