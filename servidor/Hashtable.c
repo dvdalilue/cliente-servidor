@@ -59,7 +59,7 @@ Diccionario *agregar_enhash(char *clave)
  */
 Diccionario *eliminar_enhash(char *clave)
 {
-	struct Diccionario *temp, *np;
+	Diccionario *temp, *np;
 	unsigned hashval;
 
 	if((np = buscar_enhash(clave)) != NULL) {

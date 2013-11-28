@@ -91,9 +91,6 @@ void agregarUsuario(char *sala, void *user) {
 	agregar_enlista(s->valor, u);
 	agregar_enlista(usuarios, u);
 
-	// Se libera la memoria de la estructura agregada en las listas
-	// (En el procedimiento de agregado en listas se realiza una copia de \'esta)
-	free(u);
 }
 
 // Funcion para desuscribir a un usuario de las salas en las que se encuentra

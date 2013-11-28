@@ -27,4 +27,9 @@ int main(int argc, char *argv[]) {
 
 	agregar_enhash("Hola");
 	listarSalas();
+	eliminar_enhash("Hola");
+	if(buscar_enhash("Hola")!=NULL)
+		printf("Esta");
+	else
+		printf("NoEsta");
 }
