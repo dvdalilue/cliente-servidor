@@ -4,15 +4,24 @@
 #Carnet: 09-10444
 
 CC = gcc
-MAIN = main.c
-DEPS = funciones.h
-OBJS = funciones.o main.o
+OPS = -ggdb
+CCHAT = cchat.c
+SCHAT = schat.c
+DEPS1 = func_cli.h
+OBJS1 = func_cli.o cchat.o
+DEPS2 = queue.h funciones.h
+OBJS2 = queue.o funciones.o schat.o
 
-cchat: $(OBJS)
-	$(CC) $(MAIN) -o $@ 
+all : cchat schat 
 
-%.o: %.c $(DEPS)
+cchat: $(OBJS1)
+	$(CC) $(CCHAT) -o $@
+
+schat: $(OBJS2)
+	$(CC) $(SCHAT) -o $@ 
+
+%.o: %.c $(DEPS1+DEPS2)
 	$(CC) -c $<
 
 clean:
-	\rm -f *.o *.out *.txt cchat nul
+	\rm -f *.o *.out *.txt cchat schat nul
