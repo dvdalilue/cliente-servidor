@@ -1,4 +1,4 @@
-#include "funciones.h"
+#include "func_ser.h"
 
 extern Diccionario *tablahash[TAMHASH];
 Lista usuarios;

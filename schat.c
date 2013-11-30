@@ -5,7 +5,7 @@
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "funciones.c"
+#include "func_ser.c"
 
 #define BACKLOG 2
 

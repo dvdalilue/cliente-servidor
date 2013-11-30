@@ -9,16 +9,16 @@ CCHAT = cchat.c
 SCHAT = schat.c
 DEPS1 = func_cli.h
 OBJS1 = func_cli.o cchat.o
-DEPS2 = queue.h funciones.h
-OBJS2 = queue.o funciones.o schat.o
+DEPS2 = queue.h func_ser.h
+OBJS2 = queue.o func_ser.o schat.o
 
 all : cchat schat 
 
 cchat: $(OBJS1)
-	$(CC) $(CCHAT) -o $@
+	$(CC) $(OPS) $(CCHAT) -o $@
 
 schat: $(OBJS2)
-	$(CC) $(SCHAT) -o $@ 
+	$(CC) $(OPS) $(SCHAT) -o $@ 
 
 %.o: %.c $(DEPS1+DEPS2)
 	$(CC) -c $<

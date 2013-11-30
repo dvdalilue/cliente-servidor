@@ -5,8 +5,8 @@
  - valor: Lista de los usuarios que pertenecen a la sala.
 **************************/
 
-#include "Hashtable.h"
-extern Diccionario *tablahash[TAMHASH];
+#include "hashtable.h"
+Diccionario *tablahash[TAMHASH];
 
 /* hash:
  * Obtiene el codigo hash de una cadena de caracteres

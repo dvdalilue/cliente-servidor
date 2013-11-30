@@ -1,4 +1,3 @@
-
 #ifndef hashtable
 #define hashtable
 #include "lista.c"
