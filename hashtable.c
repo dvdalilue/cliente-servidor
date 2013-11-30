@@ -6,7 +6,7 @@
 **************************/
 
 #include "hashtable.h"
-Diccionario *tablahash[TAMHASH];
+Diccionario *tablahash[100];
 
 /* hash:
  * Obtiene el codigo hash de una cadena de caracteres
@@ -16,7 +16,7 @@ unsigned hash(char *s)
   unsigned hashval;
   for (hashval = 0; *s != '\0'; s++)
     hashval = *s + 31 * hashval;
-  return hashval % TAMHASH;
+  return hashval % sizeof(tablahash);
 }
 
 /* lookup:

@@ -1,8 +1,5 @@
 #include "func_ser.h"
 
-extern Diccionario *tablahash[TAMHASH];
-Lista usuarios;
-
 //// Funcion que verifica si un archivo existe /////
 //// en el directorio, retornando true en acierto /////
 //// false en caso de fallo /////

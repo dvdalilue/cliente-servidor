@@ -2,9 +2,6 @@
 #define hashtable
 #include "lista.c"
 
-#define FicheroHashtable
-#define TAMHASH 101
-
 typedef struct _tipoDic {
   struct _tipoDic *next;
   char *clave;
