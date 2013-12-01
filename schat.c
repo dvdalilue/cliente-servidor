@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 
   int i = 1, puerto = 0;
   char *sala = "actual";
+  Lista *usuarios;
   
   while (i < argc) {
     //Reconoce el numero del puerto
@@ -41,6 +42,7 @@ int main(int argc, char *argv[]) {
   char tmp[512];
   tipoCola *cola;
   tipoCaja *caja;
+  pid_t hijo;
 
   //Creacion del socket
   if ((sock_desc = socket(AF_INET, SOCK_STREAM,0)) < 0) {
@@ -66,38 +68,53 @@ int main(int argc, char *argv[]) {
   printf("Servidor Activo y Escuchando!!\n\n");
   
   cliente = sizeof(dir_clien);
-  cola_inic(&cola);  
-
-  //Acepta las peticiones si es que han llegado en un nuevo descriptor
-  if ((sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente)) == -1) {
-    perror("accept");
-    return 4;
-  }
+  cola_inic(&cola);
+  iniciar_lista(&usuarios);
 
   while (true) {
-    bzero(tmp, sizeof(tmp));
-    //Lee del descriptor sock_fd
-    if (read(sock_fd,tmp,511) < 0) {
-      perror("Error leyendo del socket");
-      return 5;
+
+    //Acepta las peticiones si es que han llegado en un nuevo descriptor
+    if ((sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente)) == -1) {
+      perror("accept");
+      return 4;
     }
-    if (tmp[0] != 0) {
-      extrat_cmd(tmp,cola);
-      bzero(tmp, sizeof(tmp));
-      while(!estaVacio(cola)) {
-        desencolar(cola,&caja);
-        manejador_cmd(caja,tmp);
-        vaciarCaja(&caja);
+    printf("nose que sera lo que imprima: ***%d\n\n", sock_fd);
+    //agregar_enlista(usuarios,
+
+    hijo = fork();
+
+    if (hijo == 0) {
+      while (1) {
+        bzero(tmp, sizeof(tmp));
+        //Lee del descriptor sock_fd
+        if (read(sock_fd,tmp,511) < 0) {
+          perror("Error leyendo del socket");
+          return 5;
+        }
+        if (tmp[0] != 0) {
+          extrat_cmd(tmp,cola);
+          bzero(tmp, sizeof(tmp));
+          while(!estaVacio(cola)) {
+            desencolar(cola,&caja);
+            manejador_cmd(caja,tmp);
+            vaciarCaja(&caja);
+          }
+          if (strcmp(tmp,"fue") == 0) {
+            send(sock_fd,"fue\0",4,0);
+          } else if (send(sock_fd,"Informacion recibida\n",21,0) < 0) {
+            perror("Error escribiendo en el socket");
+            return 6;
+          }
+        } else if (send(sock_fd,"No hubo ningun mensaje\n",23,0) < 0) {
+          perror("Error escribiendo en el socket");
+          return 6;
+        }
       }
-      if (strcmp(tmp,"fue") == 0) {
-        send(sock_fd,"fue\0",4,0);
-      } else if (send(sock_fd,"Informacion recibida\n",21,0) < 0) {
-        perror("Error escribiendo en el socket");
-        return 6;
-      }
-    } else if (send(sock_fd,"No hubo ningun mensaje\n",23,0) < 0) {
-      perror("Error escribiendo en el socket");
-      return 6;
+      free(cola);
+      close(sock_fd);
+      exit(0);
+    } else {
+      close(sock_fd);
     }
   }
   free(cola);

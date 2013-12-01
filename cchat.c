@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
     while (true) {
       bzero(&men,sizeof(men));
-      printf("Introduzca el Comando:$ ");
+      printf("Introduzca el Comando~$ ");
       fgets(men, sizeof(men), stdin);
       if (send(s,men,511,0) < 0) {
         printf("error\n");

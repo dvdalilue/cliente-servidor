@@ -22,9 +22,9 @@ typedef struct _tipoCajaUsuario {
 
 //extern Diccionario *tablahash[TAMHASH];
 
-unsigned hash(char *);
-Diccionario *buscar_enhash(char *);
-Diccionario *agregar_enhash(char *);
-Diccionario *eliminar_enhash(char *);
+unsigned hash(char *, Diccionario * tablahash[]);
+Diccionario * buscar_enhash(char *, Diccionario * tablahash[]);
+Diccionario * agregar_enhash(char *, Diccionario * tablahash[]);
+Diccionario * eliminar_enhash(char *, Diccionario * tablahash[]);
 
 #endif
