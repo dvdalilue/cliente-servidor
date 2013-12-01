@@ -39,8 +39,8 @@ int main(int argc, char *argv[]) {
 
   int s, otro;
   struct sockaddr_in bs,des;
-  char resp[255], men[512];
-  int *sd, size;
+  CajaUsuario *usuario
+	int *sd, size;
 
   // Creamos el socket
   if ((s = socket(AF_INET,SOCK_STREAM,0)) != -1) {
@@ -61,8 +61,6 @@ int main(int argc, char *argv[]) {
     }
 
     bzero(&men,sizeof(men));
-
-    read_file(men,archivo);
 
     //Envía el mensaje
     send(s,men,511,0);

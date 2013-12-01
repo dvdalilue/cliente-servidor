@@ -31,7 +31,13 @@ struct CajaUsuario {
 	int tamListaSalas;
 };
 
+struct CajaServidor {
+	char *mensaje;
+	Lista elementos;
+};
+
 typedef struct CajaUsuario CajaUsuario;
+typedef struct CajaServidor CajaServidor;
 
 /* Prototipos de funciones para Lista.c */
 extern int buscar_enlista(Lista , Caja *);
