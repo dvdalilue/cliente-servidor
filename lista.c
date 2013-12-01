@@ -19,8 +19,9 @@ Caja * buscar_enlista(Lista * l, char * n) {
   Caja *aux;
   aux = (*l).inicio;
   while (aux != NULL) {
-    if (strcmp(aux->nombre,n) == 0)
+    if (strcmp(aux->nombre,n) == 0) {
       return aux;
+    }
     aux = aux->next;
   }
   return NULL;
@@ -32,23 +33,17 @@ Caja * buscar_enlista(Lista * l, char * n) {
  * element : Elemento a agregar.
  * return : La lista con el elemento agregado.
  */
-void agregar_enlista(Lista * l, char * d, void * v) {
+void agregar_enlista(Lista * l, char * d, int v) {
 
   Caja *temp;
   temp = (Caja *)malloc(sizeof(Caja));
   temp->nombre = d;
   temp->datos = v;
-  /*Caso lista vacia*/
-  if(l->inicio != NULL) {
-    if(buscar_enlista(l,d) != NULL) {
-      temp->next = l->inicio;
-      l->inicio = temp;
-    } else {
-      free(temp);
-    }
-  } else {
-    temp->next = NULL;
+  if(buscar_enlista(l,d) == NULL) {
+    temp->next = l->inicio;
     l->inicio = temp;
+  } else {
+    free(temp);
   }
 }
 

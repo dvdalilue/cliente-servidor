@@ -5,7 +5,7 @@
  */
 typedef struct _Caja {
   char* nombre;
-  void* datos;
+  int datos;
   struct _Caja *next;
 } Caja;
 
@@ -19,7 +19,7 @@ typedef struct _Lista {
 /* Prototipos de funciones para Lista.c */
 void iniciar_lista(Lista ** lista);
 Caja * buscar_enlista(Lista * l, char * n);
-void agregar_enlista(Lista * l, char * d, void * v);
+void agregar_enlista(Lista * l, char * d, int v);
 void eliminar_enlista(Lista * l, char * e);
 
 #endif

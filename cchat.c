@@ -53,6 +53,7 @@ int main(int argc, char *argv[]) {
       perror("connect");
       return 3;
     }
+    send(s,nombre,strlen(nombre),0);
     bzero(&men,sizeof(men));
     read_file(men,archivo);
     //Envía el mensaje

@@ -40,8 +40,10 @@ int main(int argc, char *argv[]) {
   socklen_t cliente;
   struct sockaddr_in dir_sever, dir_clien;
   char tmp[512];
+  char * nombre;
   tipoCola *cola;
   tipoCaja *caja;
+  Caja * apt;
   pid_t hijo;
 
   //Creacion del socket
@@ -78,8 +80,11 @@ int main(int argc, char *argv[]) {
       perror("accept");
       return 4;
     }
-    printf("nose que sera lo que imprima: ***%d\n\n", sock_fd);
-    //agregar_enlista(usuarios,
+
+    bzero(tmp, sizeof(tmp));
+    read(sock_fd,tmp,511);
+    nombre = (char *) malloc (strlen(tmp));
+    strcpy(nombre,tmp);
 
     hijo = fork();
 
@@ -114,6 +119,7 @@ int main(int argc, char *argv[]) {
       close(sock_fd);
       exit(0);
     } else {
+      agregar_enlista(usuarios,nombre,hijo);
       close(sock_fd);
     }
   }

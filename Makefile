@@ -9,8 +9,8 @@ CCHAT = cchat.c
 SCHAT = schat.c
 DEPS1 = func_cli.h
 OBJS1 = func_cli.o cchat.o
-DEPS2 = queue.h func_ser.h
-OBJS2 = queue.o func_ser.o schat.o
+DEPS2 = queue.h lista.h func_ser.h
+OBJS2 = queue.o lista.o func_ser.o schat.o
 
 all : cchat schat 
 
