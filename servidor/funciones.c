@@ -150,28 +150,53 @@ void listarUsuarios() {
 		printf("%s\n",u->nombre);
 }
 
-void manejador_cmd (tipoCaja * caja) {
+// Deberia devolver 1 si el comando se ejecuto correctamente, 0 en caso
+// contrario. MOSCA
+void manejador_cmd (tipoCaja *caja, void *envio) {
+
+	CajaUsuario *info_u;
+	info_u = (CajaUsuario *)envio;
   
+	// Listar las salas del servidor
   if (strcmp((*caja).elem,"sal") == 0) {
-    printf("Comando: %s\n",(*caja).elem);
+		listarSalas();
+		//return 1
   }
+	// Listar los usuarios conectados al servidor
   else if (strcmp((*caja).elem,"usu") == 0) {
-    printf("Comando: %s\n",(*caja).elem);
+		listarUsuarios();
+		//return 1
   }
+	// Enviar un mensaje a todos los usuarios suscritos a la sala en la que
+	// quien envia el mensaje esta suscrito
   else if (strcmp((*caja).elem,"men") == 0) {
-    printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);
+    printf("Comando: %s***Argumento: %s\n", (*caja).elem, (*caja).arg);
   }
+	// Suscribirse a una sala de chat
   else if (strcmp((*caja).elem,"sus") == 0) {
-    printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);
-  }
+		agregarUsuario((*caja).arg, info_u);
+		//return 1
+	}
+	// Desuscribirse de las salas en las que se esta conectado
   else if (strcmp((*caja).elem,"des") == 0) {
-    printf("Comando: %s\n",(*caja).elem);
-  }
+  	eliminarUsuario(info_u);
+		//return 1
+	}
+	// Crear una sala
   else if (strcmp((*caja).elem,"cre") == 0) {
-    printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);
+		if(agregar_enhash((*caja).arg) != NULL) {
+			printf("Se ha creado la sala '%s'.\n",(*caja).arg);
+			//return 1;
+		}
+		//return 0;
   }
+	// Eliminar una sala del servidor
   else if (strcmp((*caja).elem,"eli") == 0) {
-    printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);  }
+		eliminar_enhash((*caja).arg);
+		printf("Se ha eliminado la sala '%s'.\n",(*caja).arg);
+		//return 1;
+	}
+	// Terminar la ejecucion del programa
   else if (strcmp((*caja).elem,"fue") == 0) {
     printf("Comando: %s\n",(*caja).elem);
   } else {

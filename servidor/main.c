@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   }
   // Si el puerto no fue especificado, termina la ejecucion con un mensaje
   if (puerto == 0) {
-    printf("\n***Falta espesificar el puerto!!!***\n\n");
+    printf("\n***Falta especificar el puerto!!!***\n\n");
     exit(0);
   }
   //Declarcion del descriptor del socket y estructuras relevantes
@@ -70,7 +70,8 @@ int main(int argc, char *argv[]) {
 
   while (true) {
     //Acepta las peticiones si es que han llegado en un nuevo descriptor
-    if ((sock_fd = accept(sock_desc, (struct sockaddr *) &dir_clien, &cliente)) == -1) {
+    if ((sock_fd = accept(sock_desc, 
+													(struct sockaddr *) &dir_clien, &cliente)) == -1) {
       perror("accept");
       return 4;
     }
