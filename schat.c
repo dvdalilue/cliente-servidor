@@ -7,15 +7,27 @@
 #include <netinet/in.h>
 #include "func_ser.c"
 
-#define BACKLOG 2
+Lista * usuarios;
+
+void manejador_signal(int signo) {
+  if (signo == 17) {
+    Caja *apt;
+    apt = (*usuarios).inicio;
+    while (apt != NULL) {
+      printf("%s\n",apt->nombre);
+      apt = apt->next;
+    }
+  }
+}
 
 int main(int argc, char *argv[]) {
+
+  signal(17,manejador_signal);
 
   //Reconocimiento de opciones de entrada
 
   int i = 1, puerto = 0;
   char *sala = "actual";
-  Lista *usuarios;
   
   while (i < argc) {
     //Reconoce el numero del puerto
@@ -63,14 +75,13 @@ int main(int argc, char *argv[]) {
   }
 
   //Escucha por peticiones
-  if (listen(sock_desc,BACKLOG) == -1) {
+  if (listen(sock_desc,2) == -1) {
     perror("listen");
     return 3;
   }
   printf("Servidor Activo y Escuchando!!\n\n");
   
   cliente = sizeof(dir_clien);
-  cola_inic(&cola);
   iniciar_lista(&usuarios);
 
   while (true) {
@@ -85,10 +96,10 @@ int main(int argc, char *argv[]) {
     read(sock_fd,tmp,511);
     nombre = (char *) malloc (strlen(tmp));
     strcpy(nombre,tmp);
-
     hijo = fork();
 
     if (hijo == 0) {
+      cola_inic(&cola);
       while (1) {
         bzero(tmp, sizeof(tmp));
         //Lee del descriptor sock_fd
@@ -123,8 +134,6 @@ int main(int argc, char *argv[]) {
       close(sock_fd);
     }
   }
-  free(cola);
-  close(sock_fd);
   close(sock_desc);
   return 0;
 }

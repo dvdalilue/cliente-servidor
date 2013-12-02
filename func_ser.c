@@ -138,10 +138,10 @@ void extrat_cmd(char * mensaje, tipoCola * cola) {
 void manejador_cmd (tipoCaja * caja, char * tmp) {
   
   if (strcmp((*caja).elem,"sal") == 0) {
-    printf("Comando: %s\n",(*caja).elem);
+    //kill(getppid(),);
   }
   else if (strcmp((*caja).elem,"usu") == 0) {
-    printf("Comando: %s\n",(*caja).elem);
+    kill(getppid(),17);
   }
   else if (strcmp((*caja).elem,"men") == 0) {
     printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);
@@ -164,3 +164,12 @@ void manejador_cmd (tipoCaja * caja, char * tmp) {
     printf("Comando invalido\n");
   }
 }
+
+/* void crearVoid(tipoArgsHilo **aux, char *dir, int nivel, char *salida, int *dirs, int *archs) { */
+/*   *aux = (tipoArgsHilo *) malloc (sizeof(tipoArgsHilo)); */
+/*   (**aux).dir = dir; */
+/*   (**aux).nivel = nivel; */
+/*   (**aux).salida = salida; */
+/*   (**aux).numDirs = dirs; */
+/*   (**aux).numArchs = archs; */
+/* } */
