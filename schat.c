@@ -22,7 +22,7 @@ void manejador_signal(int signo) {
 
 int main(int argc, char *argv[]) {
 
-  signal(17,manejador_signal);
+  sigaction(17,manejador_signal);
 
   //Reconocimiento de opciones de entrada
 

@@ -137,11 +137,14 @@ void extrat_cmd(char * mensaje, tipoCola * cola) {
 
 void manejador_cmd (tipoCaja * caja, char * tmp) {
   
+  //union sigval aux;// = /* (sigval *) malloc (sizeof(sigval)); */
+  /* (*aux).int = getpid(); */
+  
   if (strcmp((*caja).elem,"sal") == 0) {
     //kill(getppid(),);
   }
   else if (strcmp((*caja).elem,"usu") == 0) {
-    kill(getppid(),17);
+    sigqueue(getppid(),17,getpid());
   }
   else if (strcmp((*caja).elem,"men") == 0) {
     printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);
