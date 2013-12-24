@@ -30,7 +30,6 @@ void read_file(char * mensaje, char * filename) {
     while (fgets(aux,50,file) != NULL) {
       strcat(mensaje,aux);
     }
-  } else {
-    printf("***El archivo no existe\n");
+    fclose(file);
   }
 }

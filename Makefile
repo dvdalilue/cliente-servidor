@@ -24,4 +24,4 @@ schat: $(OBJS2)
 	$(CC) -c $<
 
 clean:
-	\rm -f *.o *.out *.txt cchat schat nul
+	\rm -f *.o *.out *.txt cchat schat [0-9]* nul

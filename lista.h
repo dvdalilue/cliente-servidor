@@ -21,6 +21,7 @@ void iniciar_lista(Lista ** lista);
 Caja * buscar_enlista(Lista * l, char * n);
 void agregar_enlista(Lista * l, char * d, int v);
 void eliminar_enlista(Lista * l, char * e);
+char * to_s(Lista * l);
 
 #endif
 //Fin lista.h

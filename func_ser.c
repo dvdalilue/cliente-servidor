@@ -57,94 +57,14 @@ void extrat_cmd(char * mensaje, tipoCola * cola) {
   }
 }
 
-// La funcion de agregar Sala puede ser reemplazada por la de agregar_enhash
-
-// La funcion de eliminar Sala puede ser reemplazada por la de eliminar_enhash
-
-// Funcion para suscribir un usuario a una sala de chat
-
-// void? Podria devolver 0 en caso de haberse suscrito con exito y otro valor
-// dependeindo de la situacion que haya podido ocurrir (excepciones).
-/* void agregarUsuario(char *sala, void *user) { */
-/* 	// Estructura que describe a un usuario suscrito a una sala de chat */
-/* 	/\* Esta estructura contiene: */
-/* 	 * - nombre (char *): Nombre del usuario. */
-/* 	 * - datos (int): File descriptor del socket por el que se conecto el usuario */
-/* 	 *\/ */
-/* 	Caja *u; */
-/* 	CajaUsuario *info_u; */
-/* 	Diccionario *s; */
-
-/* 	info_u = (CajaUsuario *)user; */
-/* 	// Creacion de estructura que sera agregada en la lista. */
-/* 	u = (Caja *)malloc(sizeof(Caja)); */
-/* 	u->nombre = info_u->nombre; */
-/* 	u->datos = (void *)info_u->user_sockfd; */
-
-/* 	if((s = buscar_enhash(sala)) == NULL) */
-/* 		//AQUI VA UN MANEJO DE ERORRES PARA EL QUE ABAJO SE DESCRIBE */
-/* 		printf("No se puede encontrar la sala %s",sala); */
-
-/* 	agregar_enlista(s->valor, u); */
-/* 	agregar_enlista(usuarios, u); */
-
-/* } */
-
-/* // Funcion para desuscribir a un usuario de las salas en las que se encuentra */
-/* // suscrito */
-/* void eliminarUsuario(void *user) { */
-
-/*   CajaUsuario *info_u; */
-/*   Diccionario *s; */
-/*   Lista salas; */
-  
-/*   info_u = (CajaUsuario *)user; */
-/*   for(salas=info_u->salas; salas!=NULL; salas=salas->next) */
-/*     // Se crean procesos hijos que se encarguen de la desuscripcion */
-/*     if(fork() == 0) { */
-/*       if((s = buscar_enhash(salas->nombre)) == NULL) */
-/*         printf("Error al buscar la sala %s.",salas->nombre); */
-/*       // Se obtiene la informacion de la sala de chat */
-/*       eliminar_enlista(s->valor, info_u->nombre); */
-/*     } */
-
-/*   // Se eliminan las salas a las queinclude in c el usuario estaba suscrito */
-/*   info_u->salas = NULL; */
-/* } */
-
-/* // Procedimiento que muestra en pantalla la lista de salas de chat en el */
-/* // servidor */
-/* void listarSalas() { */
-/*   int i; */
-/*   Diccionario *sala; */
-
-/*   for(i=0; i<TAMHASH; i++) */
-/*     if(tablahash[i]!=NULL && fork()==0) { */
-/*       for(sala=tablahash[i]; sala!=NULL; sala=sala->next) */
-/*         printf("%s\n",sala->clave); */
-/*       exit(0); */
-/*     } */
-/* } */
-
-/* // Procedimiento que muestra en pantalla la lista de usuarios conectados al */
-/* // servidor */
-/* void listarUsuarios() { */
-/*   Lista u; */
-/*   for(u=usuarios; u!=NULL; u=u->next) */
-/*     printf("%s\n",u->nombre); */
-/* } */
-
-
 void manejador_cmd (tipoCaja * caja, char * tmp) {
-  
-  //union sigval aux;// = /* (sigval *) malloc (sizeof(sigval)); */
-  /* (*aux).int = getpid(); */
   
   if (strcmp((*caja).elem,"sal") == 0) {
     //kill(getppid(),);
   }
   else if (strcmp((*caja).elem,"usu") == 0) {
-    sigqueue(getppid(),17,getpid());
+    strcpy(tmp, "usu\0");
+    kill(getppid(),17);
   }
   else if (strcmp((*caja).elem,"men") == 0) {
     printf("Comando: %s***Argumento: %s\n",(*caja).elem, (*caja).arg);
@@ -167,12 +87,3 @@ void manejador_cmd (tipoCaja * caja, char * tmp) {
     printf("Comando invalido\n");
   }
 }
-
-/* void crearVoid(tipoArgsHilo **aux, char *dir, int nivel, char *salida, int *dirs, int *archs) { */
-/*   *aux = (tipoArgsHilo *) malloc (sizeof(tipoArgsHilo)); */
-/*   (**aux).dir = dir; */
-/*   (**aux).nivel = nivel; */
-/*   (**aux).salida = salida; */
-/*   (**aux).numDirs = dirs; */
-/*   (**aux).numArchs = archs; */
-/* } */

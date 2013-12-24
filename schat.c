@@ -11,18 +11,22 @@ Lista * usuarios;
 
 void manejador_signal(int signo) {
   if (signo == 17) {
-    Caja *apt;
-    apt = (*usuarios).inicio;
-    while (apt != NULL) {
-      printf("%s\n",apt->nombre);
-      apt = apt->next;
-    }
+    FILE * fp;
+    char * temp;
+    char file[10];
+    sprintf(file,"%d\0",getpid());
+    remove(file);
+    fp = fopen(file,"wb");
+    temp = to_s(usuarios);
+    fprintf(fp,temp);
+    free(temp);
+    fclose(fp);
   }
 }
 
 int main(int argc, char *argv[]) {
 
-  sigaction(17,manejador_signal);
+  signal(17,manejador_signal);
 
   //Reconocimiento de opciones de entrada
 
@@ -55,7 +59,6 @@ int main(int argc, char *argv[]) {
   char * nombre;
   tipoCola *cola;
   tipoCaja *caja;
-  Caja * apt;
   pid_t hijo;
 
   //Creacion del socket
@@ -92,46 +95,54 @@ int main(int argc, char *argv[]) {
       return 4;
     }
 
+    //Guarda el nombre del usuario que acaba de acceder al servidor
     bzero(tmp, sizeof(tmp));
     read(sock_fd,tmp,511);
     nombre = (char *) malloc (strlen(tmp));
     strcpy(nombre,tmp);
-    hijo = fork();
 
-    if (hijo == 0) {
-      cola_inic(&cola);
+    hijo = fork(); //Se crea un hijo que atienda a ese cliente
+
+    if (hijo == 0) { // Parte de HIJO
+      cola_inic(&cola); // Se inicia la cola
       while (1) {
         bzero(tmp, sizeof(tmp));
         //Lee del descriptor sock_fd
-        if (read(sock_fd,tmp,511) < 0) {
+        if (read(sock_fd,tmp,511) < 0) { // Lee informacion del socket
           perror("Error leyendo del socket");
           return 5;
         }
         if (tmp[0] != 0) {
-          extrat_cmd(tmp,cola);
+          extrat_cmd(tmp,cola); //Extrae el o los comandos del texto y los agrega a la cola
           bzero(tmp, sizeof(tmp));
           while(!estaVacio(cola)) {
-            desencolar(cola,&caja);
+            desencolar(cola,&caja); // Va desencolando y manejando cada comando
             manejador_cmd(caja,tmp);
             vaciarCaja(&caja);
           }
           if (strcmp(tmp,"fue") == 0) {
-            send(sock_fd,"fue\0",4,0);
-          } else if (send(sock_fd,"Informacion recibida\n",21,0) < 0) {
-            perror("Error escribiendo en el socket");
+            send(sock_fd,"fue\0",4,0); //Envia un fue si se recibio un fue para que acabe el cliente
+          } 
+          else if (strcmp(tmp,"usu") == 0) {
+            sprintf(nombre,"%d\0",getppid());  // Si el comando es usu manda los nombre de usuario
+            send(sock_fd,nombre,strlen(nombre),0);
+          }
+          else if (send(sock_fd,"Informacion recibida\n",21,0) < 0) {
+            perror("Error escribiendo en el socket"); //En otro caso solo dice que se recibio la informacion
             return 6;
           }
         } else if (send(sock_fd,"No hubo ningun mensaje\n",23,0) < 0) {
-          perror("Error escribiendo en el socket");
+          perror("Error escribiendo en el socket"); // Sino simplemente dice que no hubo mensaje
           return 6;
         }
       }
-      free(cola);
-      close(sock_fd);
-      exit(0);
-    } else {
-      agregar_enlista(usuarios,nombre,hijo);
-      close(sock_fd);
+      free(nombre); //Libera el malloc del nombre
+      free(cola); // Libera la cola
+      close(sock_fd); // Cierra el socket
+      exit(0); // Y sale
+    } else { // Parte del PADRE
+      agregar_enlista(usuarios,nombre,hijo); // Agrega el usuario a la lista
+      close(sock_fd); // Cierra el socket
     }
   }
   close(sock_desc);

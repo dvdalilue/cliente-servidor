@@ -74,4 +74,18 @@ void eliminar_enlista(Lista * l, char * e) {
     }
   }
 }
+
+char * to_s(Lista * l) {
+  
+  Caja * tmp;
+  tmp = (*l).inicio;
+  char * resp = (char *) malloc (512);
+  while (tmp != NULL) {
+    strcat(resp, tmp->nombre);
+    strcat(resp,"\n");
+    tmp = tmp->next;
+  }
+  return resp;
+}
+
 //Fin Lista.c

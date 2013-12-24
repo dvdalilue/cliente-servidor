@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "func_cli.c"
+#include "lista.c"
 
 int main(int argc, char *argv[]) {
 
@@ -30,15 +31,17 @@ int main(int argc, char *argv[]) {
     i++;
   }
 
-  /* if (puerto == -1 || strcmp(host,"vacio") == 0 || strcmp(nombre,"vacio") == 0 || strcmp(archivo,"vacio") == 0) { */
-  /*   printf("\n***Falta espesificar algun valor o no se hizo correctamente!!!\n\n"); */
-  /*   exit(0); */
-  /* } */
+  if (puerto == -1 || strcmp(nombre,"vacio") == 0) {
+    printf("\n***Falta espesificar puerto y/o nombre del cliente!!!\n\n");
+    exit(0);
+  }
 
+  //Declaracion de variables
   int s, otro;
   struct sockaddr_in bs,des;
   char resp[255], men[512];
   int *sd, size;
+  Lista * usu;
 
   // Creamos el socket
   if ((s = socket(AF_INET,SOCK_STREAM,0)) != -1) {
@@ -53,6 +56,7 @@ int main(int argc, char *argv[]) {
       perror("connect");
       return 3;
     }
+    //Envia el nombre antes que nada
     send(s,nombre,strlen(nombre),0);
     bzero(&men,sizeof(men));
     read_file(men,archivo);
@@ -66,19 +70,23 @@ int main(int argc, char *argv[]) {
     while (true) {
       bzero(&men,sizeof(men));
       printf("Introduzca el Comando~$ ");
-      fgets(men, sizeof(men), stdin);
+      fgets(men, sizeof(men), stdin); // Pide por comando despues de leer o no el archivo
       if (send(s,men,511,0) < 0) {
         printf("error\n");
       }
       //Recibe la respuesta
       bzero(&resp,sizeof(resp));
       read(s,resp, sizeof(resp));
-      if (strcmp(resp,"fue") == 0) {
+      if (strcmp(resp,"fue") == 0) { // Si se recibe fue, sale como se indico
         break;
+      } else {
+        wait(50);
+        bzero(&men,sizeof(men)); // Caso para usu o nada
+        read_file(men,resp);
+        remove(resp);
+        printf("<-Recibido:\n%s\n",men);
       }
-      printf("<-Recibido: %s\n",resp);
     }
-
     //Se cierra la conexión (socket)
     close(s);
   } else {
